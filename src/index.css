@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-pathway-green: #1D9E75;
+  --color-deep-forest: #1B3A2D;
+  --color-amber-porch: #EF9F27;
+  --color-linen-white: #F1EFE8;
+  --color-slate-text: #5F5E5A;
+
+  --shadow-subtle: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+@layer base {
+  body {
+    @apply bg-linen-white text-slate-text font-sans antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply text-deep-forest font-medium tracking-tight;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
