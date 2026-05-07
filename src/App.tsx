@@ -3,76 +3,58 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 
-const Logo = ({ className = "" }: { className?: string }) => (
-  <svg 
-    viewBox="0 0 24 24" 
-    className={`w-8 h-8 ${className} text-pathway-green`}
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    {/* House shape */}
-    <path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    {/* Checkmark */}
-    <path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
+/* Logo */
+const Logo = ({ light = false, size = 'default' }: { light?: boolean; size?: 'default' | 'lg' }) => (
+  <div className="flex items-center gap-2.5">
+    <svg viewBox="0 0 48 48" className={size === 'lg' ? 'w-11 h-11' : 'w-9 h-9'} fill="none">
+      <path d="M8 22L24 8L40 22V40C40 41.1 39.1 42 38 42H10C8.9 42 8 41.1 8 40V22Z" fill="#1D9E75"/>
+      <path d="M4 24L24 6L44 24" stroke="#1D9E75" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="20" y="30" width="8" height="12" rx="1" fill="#16795A"/>
+      <circle cx="34" cy="14" r="8" fill="#1D9E75" stroke={light ? '#1B3A2D' : 'white'} strokeWidth="2.5"/>
+      <path d="M30.5 14L33 16.5L37.5 11.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+    <div className="flex flex-col leading-none">
+      <span className={`font-bold ${size === 'lg' ? 'text-2xl' : 'text-xl'} ${light ? 'text-white' : 'text-deep-forest'} tracking-tight`}>Wayside</span>
+      <span className={`font-bold ${size === 'lg' ? 'text-[11px]' : 'text-[9px]'} text-pathway-green tracking-[0.25em] uppercase`}>Services</span>
+    </div>
+  </div>
 );
 
-const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 h-20 flex items-center bg-white border-b border-black/5 ${scrolled ? 'shadow-subtle' : ''}`}>
-      <div className="max-w-7xl mx-auto px-10 w-full flex justify-between items-center">
-        <div className="flex items-center gap-2.5">
-          <Logo />
-          <span className="font-bold text-xl text-deep-forest tracking-tight">Wayside Services</span>
-        </div>
-        <div className="hidden md:flex gap-6 items-center text-sm font-semibold text-deep-forest">
-          <a href="#included" className="hover:text-pathway-green transition-colors">What's Included</a>
-          <a href="#how-it-works" className="hover:text-pathway-green transition-colors">How It Works</a>
-          <a href="#pricing" className="hover:text-pathway-green transition-colors">Pricing</a>
-          <a href="#contact" className="hover:text-pathway-green transition-colors">Contact</a>
-          <button className="bg-amber-porch text-white px-6 py-3.5 rounded-lg hover:brightness-105 transition-all font-semibold">Start my plan</button>
-        </div>
-      </div>
-    </nav>
-  );
-};
-
-const FAQItem = ({ question, answer }: { question: string, answer: string }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="border-b border-gray-200 py-4">
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center text-left focus:outline-none"
+/* Sticky Mobile CTA */
+const StickyCTA = ({ show }: { show: boolean }) => (
+  <AnimatePresence>
+    {show && (
+      <motion.div
+        initial={{ y: 80 }} animate={{ y: 0 }} exit={{ y: 80 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+        className="fixed bottom-0 inset-x-0 z-50 md:hidden p-3 bg-white/80 backdrop-blur-xl border-t border-black/5"
       >
-        <span className="text-lg font-medium text-deep-forest">{question}</span>
-        <i className={`ti ti-chevron-down transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}></i>
+        <button onClick={() => (window as any).__openForm?.()} className="w-full bg-deep-forest text-white py-4 rounded-xl font-bold text-[15px] active:scale-[0.98] transition-transform">
+          Start my plan
+        </button>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
+/* FAQ Item */
+const FAQ = ({ q, a }: { q: string; a: string }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-deep-forest/8 last:border-0">
+      <button onClick={() => setOpen(!open)} className="w-full flex justify-between items-center py-6 text-left group">
+        <span className="text-[17px] font-medium text-deep-forest group-hover:text-pathway-green transition-colors pr-8">{q}</span>
+        <span className={`text-deep-forest/40 transition-transform duration-300 ${open ? 'rotate-45' : ''}`}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+        </span>
       </button>
       <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
-          >
-            <p className="pt-4 text-slate-text leading-relaxed">
-              {answer}
-            </p>
+        {open && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}>
+            <p className="pb-6 text-slate-text leading-relaxed text-[15px] pr-12">{a}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -80,261 +62,478 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
   );
 };
 
-export default function App() {
+/* Questionnaire Modal */
+const QuestionnaireModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({ concern: '', homeType: '', name: '', phone: '' });
+
+  const concerns = [
+    { label: 'Preventive maintenance', icon: 'ti-shield-check' },
+    { label: 'Something specific needs fixing', icon: 'ti-tool' },
+    { label: 'Just moved in, need a checkup', icon: 'ti-home' },
+    { label: 'Not sure yet, exploring options', icon: 'ti-search' }
+  ];
+
+  const homeTypes = [
+    { label: 'Single-family home', icon: 'ti-home-2' },
+    { label: 'Townhouse / Duplex', icon: 'ti-building' },
+    { label: 'Condo / Apartment', icon: 'ti-buildings' },
+    { label: 'Other', icon: 'ti-dots' }
+  ];
+
+  const reset = () => { setStep(0); setAnswers({ concern: '', homeType: '', name: '', phone: '' }); };
+
   return (
-    <div className="min-h-screen">
-      <Navbar />
-
-      {/* Hero Section */}
-      <section className="pt-40 pb-20 md:pt-56 md:pb-32 px-10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
-          <div className="md:w-1/2">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-6xl lg:text-[72px] font-medium text-deep-forest mb-5 leading-[1.1] tracking-tight"
-            >
-              Your home, handled.
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-lg md:text-xl text-slate-text mb-8 leading-relaxed"
-            >
-              We handle the small stuff — before it becomes expensive stuff. $99.99/month. No contracts. Cancel anytime.
-            </motion.p>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-wrap gap-4"
-            >
-              <button className="bg-amber-porch text-white px-8 py-4 rounded-md text-lg font-bold hover:brightness-105 transition-all shadow-sm">
-                Start my plan &rarr;
-              </button>
-              <a href="#included" className="border-2 border-pathway-green text-pathway-green px-8 py-4 rounded-md text-lg font-bold hover:bg-pathway-green hover:text-white transition-all text-center">
-                See what's included
-              </a>
-            </motion.div>
-          </div>
-          <div className="md:w-1/2 hidden md:block">
-            {/* Visual representation of the "Grid area" from theme */}
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { icon: 'ti-bulb', title: 'Light Bulbs' },
-                { icon: 'ti-air-conditioning', title: 'AC Filters' },
-                { icon: 'ti-plug', title: 'Safety Check' },
-                { icon: 'ti-droplet', title: 'Leak Audit' }
-              ].map((item, i) => (
-                <div key={i} className="bg-white p-6 rounded-xl shadow-subtle border border-black/5 flex flex-col gap-2">
-                  <div className="w-8 h-8 text-pathway-green"><i className={`ti ${item.icon} text-2xl`}></i></div>
-                  <div className="font-semibold text-sm text-deep-forest">{item.title}</div>
-                </div>
-              ))}
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) { onClose(); reset(); } }}
+        >
+          <div className="absolute inset-0 bg-deep-forest/60 backdrop-blur-sm" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+            className="relative bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl"
+          >
+            {/* Progress bar */}
+            <div className="h-1 bg-linen-white">
+              <motion.div
+                className="h-full bg-pathway-green rounded-full"
+                animate={{ width: `${((step + 1) / 3) * 100}%` }}
+                transition={{ duration: 0.3 }}
+              />
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Trust Bar - Positioned like the theme's footer bar but after hero */}
-      <section className="bg-white px-10 py-6 border-y border-black/5">
-        <div className="max-w-7xl mx-auto flex flex-col md:row justify-between items-center gap-4 text-xs font-bold text-deep-forest tracking-widest uppercase">
-          <div className="flex items-center gap-2">
-            <span>500+ HOMES SERVED</span>
-            <span className="text-pathway-green">•</span>
-            <span>4.9★ AVERAGE RATING</span>
-          </div>
-          <div className="hidden md:flex items-center gap-2">
-            <span>LOCALLY OWNED & OPERATED</span>
-            <span className="text-pathway-green">•</span>
-            <span>PROACTIVE MAINTENANCE</span>
+            <button onClick={() => { onClose(); reset(); }} className="absolute top-4 right-4 text-slate-text/40 hover:text-deep-forest transition-colors">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+            </button>
+
+            <div className="p-8">
+              <AnimatePresence mode="wait">
+                {step === 0 && (
+                  <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
+                    <h3 className="text-xl font-semibold text-deep-forest mb-2">What brings you to Wayside?</h3>
+                    <p className="text-slate-text text-sm mb-6">Help us understand how we can best serve your home.</p>
+                    <div className="flex flex-col gap-2">
+                      {concerns.map((c) => (
+                        <button key={c.label} onClick={() => { setAnswers(a => ({...a, concern: c.label})); setStep(1); }}
+                          className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all text-sm ${
+                            answers.concern === c.label ? 'border-pathway-green bg-pathway-green/5 text-deep-forest' : 'border-deep-forest/8 hover:border-pathway-green/30 text-slate-text hover:text-deep-forest'
+                          }`}
+                        >
+                          <i className={`ti ${c.icon} text-pathway-green text-lg`} />
+                          {c.label}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 1 && (
+                  <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
+                    <h3 className="text-xl font-semibold text-deep-forest mb-2">What type of home?</h3>
+                    <p className="text-slate-text text-sm mb-6">This helps us send the right technician.</p>
+                    <div className="flex flex-col gap-2">
+                      {homeTypes.map((h) => (
+                        <button key={h.label} onClick={() => { setAnswers(a => ({...a, homeType: h.label})); setStep(2); }}
+                          className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all text-sm ${
+                            answers.homeType === h.label ? 'border-pathway-green bg-pathway-green/5 text-deep-forest' : 'border-deep-forest/8 hover:border-pathway-green/30 text-slate-text hover:text-deep-forest'
+                          }`}
+                        >
+                          <i className={`ti ${h.icon} text-pathway-green text-lg`} />
+                          {h.label}
+                        </button>
+                      ))}
+                    </div>
+                    <button onClick={() => setStep(0)} className="mt-4 text-slate-text/50 text-sm hover:text-deep-forest transition-colors">← Back</button>
+                  </motion.div>
+                )}
+
+                {step === 2 && (
+                  <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
+                    <h3 className="text-xl font-semibold text-deep-forest mb-2">Almost there!</h3>
+                    <p className="text-slate-text text-sm mb-6">We'll reach out to schedule your first visit.</p>
+                    <form className="flex flex-col gap-3" onSubmit={(e) => { e.preventDefault(); onClose(); reset(); }}>
+                      <input type="text" placeholder="Full name" required value={answers.name} onChange={e => setAnswers(a => ({...a, name: e.target.value}))}
+                        className="w-full px-4 py-3.5 rounded-xl border border-deep-forest/10 text-deep-forest text-sm placeholder:text-slate-text/50 focus:outline-none focus:border-pathway-green focus:ring-2 focus:ring-pathway-green/10 transition-all bg-linen-white/50"
+                      />
+                      <input type="tel" placeholder="Phone number" required value={answers.phone} onChange={e => setAnswers(a => ({...a, phone: e.target.value}))}
+                        className="w-full px-4 py-3.5 rounded-xl border border-deep-forest/10 text-deep-forest text-sm placeholder:text-slate-text/50 focus:outline-none focus:border-pathway-green focus:ring-2 focus:ring-pathway-green/10 transition-all bg-linen-white/50"
+                      />
+                      <button type="submit" className="w-full bg-amber-porch text-white py-4 rounded-xl font-bold text-[15px] hover:brightness-110 transition-all shadow-lg shadow-amber-porch/20 mt-1">
+                        Get my free estimate
+                      </button>
+                    </form>
+                    <button onClick={() => setStep(1)} className="mt-4 text-slate-text/50 text-sm hover:text-deep-forest transition-colors">← Back</button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+/* Main */
+export default function App() {
+  const [scrolled, setScrolled] = useState(false);
+  const [showSticky, setShowSticky] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => setShowSticky(!e.isIntersecting), { threshold: 0 });
+    if (heroRef.current) obs.observe(heroRef.current);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    (window as any).__openForm = () => setFormOpen(true);
+    return () => { delete (window as any).__openForm; };
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-white">
+
+      <QuestionnaireModal open={formOpen} onClose={() => setFormOpen(false)} />
+
+      {/* Nav */}
+      <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
+        scrolled ? 'bg-white/80 backdrop-blur-xl shadow-[0_1px_0_rgba(0,0,0,0.04)]' : 'bg-transparent'
+      }`}>
+        <div className="max-w-6xl mx-auto px-6 h-[72px] flex items-center justify-between">
+          <Logo light={!scrolled} />
+          <div className="hidden md:flex items-center gap-8">
+            {['How It Works', 'Pricing', 'FAQ'].map(l => (
+              <a key={l} href={`#${l.toLowerCase().replace(/\s/g, '-')}`}
+                className={`text-sm font-medium transition-colors ${scrolled ? 'text-slate-text hover:text-deep-forest' : 'text-white/70 hover:text-white'}`}>
+                {l}
+              </a>
+            ))}
+            <button onClick={() => setFormOpen(true)} className={`px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${
+              scrolled ? 'bg-deep-forest text-white hover:bg-deep-forest/90' : 'bg-white text-deep-forest hover:bg-white/90'
+            }`}>
+              Get Started
+            </button>
           </div>
         </div>
+      </nav>
+
+      <StickyCTA show={showSticky} />
+
+      {/* Hero */}
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center z-50">
+        <div className="absolute inset-0 rounded-b-[3rem] sm:rounded-b-[4rem] overflow-hidden shadow-2xl -z-10">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/hero-bg.png')" }} />
+          <div className="absolute inset-0 bg-gradient-to-b from-deep-forest/70 via-deep-forest/60 to-deep-forest/85" />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-6 w-full pt-32 pb-20">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+            className="text-[clamp(2rem,5.5vw,3.8rem)] font-semibold text-white leading-[1.12] tracking-tight mb-6"
+          >
+            Home Maintenance Services{' '}
+            Serving the Greater Reno Area
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="text-white/70 text-base md:text-lg leading-relaxed mb-10 max-w-2xl mx-auto"
+          >
+            Need reliable home maintenance in Reno, Nevada? Wayside Services handles the small stuff before it becomes expensive stuff. One monthly visit, one flat rate, exceptional service every time.
+          </motion.p>
+
+          <motion.div ref={heroRef} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="w-full flex justify-center px-4">
+            <a href="#pricing" className="w-full sm:w-auto bg-amber-porch text-white px-12 py-5 rounded-full text-base md:text-[15px] font-bold hover:brightness-110 transition-all shadow-xl shadow-amber-porch/25 max-w-sm">
+              Get a Free Estimate
+            </a>
+          </motion.div>
+        </div>
+
+        {/* Trust Badge Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+          className="relative z-10 w-full max-w-3xl mx-auto px-6 pb-0 translate-y-12 sm:translate-y-16 -mb-12 sm:-mb-16"
+        >
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            {[
+              { platform: 'Google', rating: '4.9', reviews: '237', color: '#4285F4' },
+              { platform: 'Yelp', rating: '4.8', reviews: '184', color: '#D32323' },
+              { platform: 'BBB', rating: 'A+', reviews: '52', color: '#005A78' }
+            ].map((badge, i) => (
+              <div key={i} className="bg-white rounded-xl sm:rounded-2xl px-3 sm:px-6 py-4 sm:py-5 shadow-xl shadow-black/10 flex flex-col items-center gap-1">
+                <span className="font-bold text-xs sm:text-[15px] tracking-tight" style={{ color: badge.color }}>{badge.platform}</span>
+                <div className="flex items-center gap-1">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-amber-porch" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <span className="text-deep-forest font-semibold text-[10px] sm:text-sm">{badge.rating} rating</span>
+                </div>
+                <span className="text-slate-text/60 text-[9px] sm:text-xs">{badge.reviews} reviews</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </section>
 
       {/* What's Included */}
-      <section id="included" className="py-24 px-10 bg-linen-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-16">
-            <h2 className="text-4xl font-medium text-deep-forest mb-4">Everything your home needs.</h2>
-            <p className="text-slate-text max-w-xl">One subscription, comprehensive monthly care. No surprises.</p>
+      <section className="relative z-40 bg-white -mt-12 sm:-mt-16 pt-32 md:pt-40 pb-24 md:pb-32 px-6 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]">
+        <div className="max-w-6xl mx-auto">
+          <div className="max-w-xl mb-6">
+            <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight">What every visit covers</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <p className="text-slate-text max-w-lg mb-14">Each month, your dedicated technician works through a comprehensive checklist tailored to your home.</p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[1fr]">
             {[
-              { id: 'included-1', icon: 'ti-bulb', title: 'Light Bulb Replacement', desc: 'Up to 2 LED bulbs replaced per visit. No more ladders.' },
-              { id: 'included-2', icon: 'ti-air-conditioning', title: 'AC Filter Change', desc: 'Monthly filter swap for optimal air quality and efficiency.' },
-              { id: 'included-3', icon: 'ti-plug', title: 'Outlet Safety Check', desc: 'Visual and mechanical check of your electrical receptacles.' },
-              { id: 'included-4', icon: 'ti-droplet', title: 'Visual Plumbing Inspection', desc: 'Checking for leaks under sinks and around toilets before they cause damage.' },
-              { id: 'included-5', icon: 'ti-fridge', title: 'Fridge Filter Swap', desc: 'Quarterly check and replacement of your refrigerator water filter.' },
-              { id: 'included-6', icon: 'ti-report', title: 'Monthly Home Report', desc: 'A detailed summary of everything we checked and fixed.' }
-            ].map((service) => (
-              <div key={service.id} id={service.id} className="bg-white p-5 rounded-xl border border-black/5 flex flex-col gap-2.5 transition-all hover:shadow-subtle hover:border-pathway-green/20 group">
-                <div className="w-10 h-10 text-pathway-green">
-                  <i className={`ti ${service.icon} text-2xl`}></i>
+              { icon: 'ti-report', title: 'Digital Home Report', desc: 'Photos, notes, and recommendations sent to you after every single visit. Fully transparent, archived for your records, and easy to share.', span: 'md:col-span-2 md:row-span-2', large: true, bg: 'bg-deep-forest text-white', textTitle: 'text-white', textDesc: 'text-white/70', iconBg: 'bg-white/10', iconColor: 'text-white', border: 'border-deep-forest hover:border-pathway-green' },
+              { icon: 'ti-bulb', title: 'Lighting & Fixture Upkeep', desc: 'Bulb swaps (up to 2 per visit), fixture checks, and visual inspections of outlets and switches.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: 'ti-droplet', title: 'Proactive Leak Detection', desc: 'Leak detection under sinks, toilet inspections, and water heater checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
+              { icon: 'ti-home', title: 'Exterior Perimeter Inspection', desc: 'Gutters, downspouts, and a visual check of siding and entry points.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
+              { icon: 'ti-air-conditioning', title: 'Air Quality Management', desc: 'Filter replacements (1 intake, 1 fresh air) and visual system checks to keep your air clean and running efficiently.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: 'ti-lock', title: 'Safety Sensor Verification', desc: 'Smoke detector battery tests, door lock checks, and carbon monoxide sensor verification.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+            ].map((s, i) => (
+              <div key={i} className={`group p-6 md:p-8 rounded-3xl border ${s.border} transition-all duration-300 relative overflow-hidden flex flex-col ${s.bg} ${s.span} hover:shadow-xl hover:-translate-y-1`}>
+                {s.large && <div className="absolute top-0 right-0 w-64 h-64 bg-pathway-green/20 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-pathway-green/30 transition-colors duration-500" />}
+                {!s.large && <div className="absolute top-0 right-0 w-32 h-32 bg-pathway-green/5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-pathway-green/10 transition-colors duration-500" />}
+                
+                <div className={`rounded-2xl flex items-center justify-center mb-auto shadow-sm backdrop-blur-sm group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ${s.iconBg} ${s.large ? 'w-16 h-16 mb-12' : 'w-12 h-12 mb-6'}`}>
+                  <i className={`ti ${s.icon} ${s.iconColor} ${s.large ? 'text-3xl' : 'text-xl'}`} />
                 </div>
-                <h3 className="font-semibold text-[15px] text-deep-forest leading-tight">{service.title}</h3>
-                <p className="text-[13px] text-slate-text/90 leading-normal">{service.desc}</p>
+                <div className={`${s.large ? 'mt-auto' : ''} relative z-10`}>
+                  <h3 className={`font-semibold mb-2 ${s.textTitle} ${s.large ? 'text-2xl' : 'text-lg'}`}>{s.title}</h3>
+                  <p className={`text-sm md:text-[15px] leading-relaxed ${s.textDesc}`}>{s.desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section id="how-it-works" className="py-24 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-medium text-deep-forest mb-4">Peace of mind in 3 steps.</h2>
+
+
+      {/* Guarantee */}
+      <section className="relative z-30 bg-deep-forest">
+        <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+          <div className="w-10 h-10 rounded-full bg-pathway-green/15 flex items-center justify-center flex-shrink-0">
+            <i className="ti ti-shield-check text-pathway-green text-xl" />
           </div>
-          <div className="relative">
-            <div className="hidden md:block absolute top-8 left-0 w-full h-0.5 bg-gray-100 z-0"></div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10">
+          <p className="text-white/80 text-sm"><strong className="text-white">100% Satisfaction Guarantee.</strong> Not happy after your first visit? Full refund. Proudly serving Reno homeowners.</p>
+        </div>
+      </section>
+
+
+
+      {/* How It Works */}
+      <section id="how-it-works" className="relative z-20 bg-linen-white pt-12 md:pt-16 pb-24 md:pb-32 px-6 rounded-b-[3rem] sm:rounded-b-[4rem]">
+        <div className="max-w-6xl mx-auto">
+          <div className="max-w-xl mb-20">
+            <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight">Three steps to a worry-free home</h2>
+          </div>
+          <div className="relative max-w-3xl mx-auto mt-16 pb-8">
+            <div className="flex flex-col gap-12 md:gap-20">
               {[
-                { step: 1, title: 'Subscribe online', desc: 'It takes 60 seconds. No long forms, no complicated contracts.' },
-                { step: 2, title: 'Schedule your first visit', desc: 'We\'ll call you to find a time that fits your busy life perfectly.' },
-                { step: 3, title: 'Relax every month', desc: 'We show up monthly, handle the punch list, and move on.' }
-              ].map((item) => (
-                <div key={item.step} className="text-center">
-                  <div className="w-16 h-16 bg-pathway-green text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">
-                    {item.step}
+                { n: '01', title: 'Fill out a quick form', desc: 'Share a few details about your home so we know exactly what to expect on our first visit.' },
+                { n: '02', title: 'Subscribe to the service', desc: 'Sign up for our simple monthly plan based on your home\'s footprint.' },
+                { n: '03', title: 'Live in peace', desc: 'Rest easy knowing a trusted professional is proactively maintaining your home every month.' }
+              ].map((s, i) => (
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: false, margin: "-20% 0px" }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="relative pl-16 md:pl-28"
+                >
+                  {i !== 2 && (
+                    <>
+                      <div className="absolute left-[22px] md:left-[38px] top-4 h-[calc(100%+3rem)] md:h-[calc(100%+5rem)] w-1 bg-deep-forest/10 rounded-full" />
+                      <motion.div 
+                        className="absolute left-[22px] md:left-[38px] top-4 h-[calc(100%+3rem)] md:h-[calc(100%+5rem)] w-1 bg-pathway-green rounded-full origin-top"
+                        initial={{ scaleY: 0 }}
+                        whileInView={{ scaleY: 1 }}
+                        viewport={{ once: false, margin: "-10% 0px -40% 0px" }}
+                        transition={{ duration: 0.7, ease: "easeInOut" }}
+                      />
+                    </>
+                  )}
+                  <div className="absolute left-0 top-0 w-12 h-12 md:w-20 md:h-20 rounded-full bg-white border-4 border-linen-white flex items-center justify-center shadow-sm z-10 hover:border-pathway-green/30 transition-colors">
+                    <span className="text-pathway-green font-bold text-lg md:text-2xl">{s.n}</span>
                   </div>
-                  <h3 className="text-xl font-medium text-deep-forest mb-3">{item.title}</h3>
-                  <p className="text-slate-text">{item.desc}</p>
-                </div>
+                  <div className="pt-2 md:pt-4 relative z-10">
+                    <h3 className="font-semibold text-deep-forest text-xl md:text-2xl mt-4 mb-3">{s.title}</h3>
+                    <p className="text-slate-text leading-relaxed text-base md:text-lg max-w-md">{s.desc}</p>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="py-24 px-10 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-deep-forest rounded-2xl p-10 md:p-16 flex flex-col md:flex-row justify-between items-center gap-12 text-white">
-            <div className="max-w-md">
-              <div className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Standard Membership</div>
-              <div className="text-5xl md:text-6xl font-bold text-pathway-green mb-6">$99.99<span className="text-lg font-normal text-white/40">/mo</span></div>
-              <p className="text-white/80 text-lg mb-8 text-left">Comprehensive routine maintenance for any home. No hidden fees, no surprises.</p>
-              <div className="flex flex-col gap-3 text-sm text-white/90">
-                <div className="flex items-center gap-2">
-                  <i className="ti ti-check text-pathway-green"></i>
-                  <span>Fully licensed & local experts</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="ti ti-check text-pathway-green"></i>
-                  <span>No contracts. Cancel anytime.</span>
-                </div>
-              </div>
-            </div>
-            <div className="w-full md:w-auto">
-              <button className="w-full md:w-auto bg-amber-porch text-white px-10 py-5 rounded-lg text-lg font-bold hover:brightness-105 transition-all shadow-lg">
-                Start my plan &rarr;
-              </button>
-            </div>
+          <div className="mt-16 text-center">
+            <button onClick={() => setFormOpen(true)} className="bg-deep-forest text-white px-8 py-4 rounded-xl text-[15px] font-bold hover:bg-deep-forest/90 transition-colors">
+              Get started today →
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Why Wayside */}
-      <section className="py-24 px-10 bg-linen-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {[
-              { icon: 'ti-shield-check', title: 'We prevent, not just fix', desc: 'Most home damage is avoidable. Our proactive approach spots small issues before they become expensive.' },
-              { icon: 'ti-user-check', title: 'Consistent face, every month', desc: 'You\'ll know exactly who is coming into your home. A dedicated technician who knows your property.' },
-              { icon: 'ti-clock', title: 'Honest and in and out', desc: 'We value your time. Our visits are efficient, respectful, and we always leave your home cleaner.' }
-            ].map((benefit, idx) => (
-              <div key={idx} className="flex flex-col gap-4">
-                <div className="w-12 h-12 text-pathway-green mb-2">
-                  <i className={`ti ${benefit.icon} text-3xl`}></i>
+
+
+      {/* Pricing */}
+      <section id="pricing" className="relative z-10 bg-white -mt-12 sm:-mt-16 pt-24 sm:pt-28 pb-24 md:pb-32 px-6 rounded-b-[3rem] sm:rounded-b-[4rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight mb-3">Simple, transparent pricing.</h2>
+          <p className="text-slate-text mb-12 max-w-md mx-auto">Choose the flat-rate plan that fits your home's footprint. No hidden fees.</p>
+
+          <div className="bg-deep-forest rounded-3xl p-8 md:p-12 text-left max-w-2xl mx-auto">
+            
+            <div className="flex flex-col md:flex-row gap-8 mb-10 pb-10 border-b border-white/10">
+              <div className="flex-1">
+                <h3 className="text-white font-bold text-xl mb-1">Single Story</h3>
+                <p className="text-white/60 text-sm mb-4">4 beds, 2 baths, or less</p>
+                <div className="flex items-end gap-1">
+                  <span className="text-5xl font-bold text-white">$99<span className="text-3xl">.99</span></span>
+                  <span className="text-white/40 text-base mb-1">/mo</span>
                 </div>
-                <h3 className="text-xl font-semibold text-deep-forest">{benefit.title}</h3>
-                <p className="text-slate-text leading-relaxed">{benefit.desc}</p>
               </div>
-            ))}
+              <div className="hidden md:block w-px bg-white/10" />
+              <div className="md:hidden h-px bg-white/10" />
+              <div className="flex-1">
+                <h3 className="text-white font-bold text-xl mb-1">Two Story</h3>
+                <p className="text-white/60 text-sm mb-4">Standard 2-story layout</p>
+                <div className="flex items-end gap-1">
+                  <span className="text-5xl font-bold text-white">$129<span className="text-3xl">.99</span></span>
+                  <span className="text-white/40 text-base mb-1">/mo</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mb-10">
+              {[
+                'Lighting & fixture upkeep', 'Air quality management',
+                'Proactive leak detection', 'Exterior perimeter inspection',
+                'Safety sensor verification', 'Digital home report',
+                '2 bulbs included each monthly visit', '1 intake & 1 fresh air filter included each monthly visit'
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2.5 text-sm text-white/80">
+                  <svg className="w-4 h-4 text-pathway-green flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                  {item}
+                </div>
+              ))}
+            </div>
+
+            <button onClick={() => setFormOpen(true)} className="w-full bg-amber-porch text-white py-4 rounded-xl font-bold text-[16px] hover:brightness-110 transition-all shadow-xl shadow-amber-porch/20">
+              Start my plan →
+            </button>
+
+
           </div>
         </div>
       </section>
+
+
 
       {/* Testimonials */}
-      <section className="py-24 px-10 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-medium text-deep-forest mb-16">Stories from your neighbors.</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section className="relative z-[5] bg-linen-white -mt-12 sm:-mt-16 pt-36 md:pt-48 pb-24 md:pb-32 px-6 rounded-b-[3rem] sm:rounded-b-[4rem]">
+        <div className="max-w-6xl mx-auto">
+          <div className="max-w-xl mb-16">
+            <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight">Hear from homeowners<br/>already on Wayside</h2>
+          </div>
+        <div className="relative w-full max-w-[100vw] overflow-hidden px-0">
+          <div className="absolute top-0 left-0 bottom-0 w-20 md:w-48 bg-gradient-to-r from-linen-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute top-0 right-0 bottom-0 w-20 md:w-48 bg-gradient-to-l from-linen-white to-transparent z-10 pointer-events-none" />
+
+          <div className="flex w-max animate-marquee gap-6">
             {[
-              { name: 'Sarah Miller', city: 'Maplewood', quote: 'As a new homeowner, I was completely overwhelmed by everything I needed to check. Wayside gave me my weekends back.' },
-              { name: 'Robert Chen', city: 'Oak Ridge', quote: 'They found a slow leak under my kitchen sink during their first visit. Fixed it in 5 minutes. That alone saved me hundreds.' },
-              { name: 'Evelyn Grant', city: 'Westside', quote: 'Safe, reliable, and unpretentious. My technician is like family now. I recommend them to everyone in my building.' }
-            ].map((t, idx) => (
-              <div key={idx} className="bg-linen-white p-8 rounded-xl border-l-4 border-pathway-green">
-                <p className="text-slate-text italic mb-6 leading-relaxed">"{t.quote}"</p>
+              { q: 'Wayside gave me my weekends back. As a new homeowner, I was completely overwhelmed.', n: 'Sarah M.', l: 'Maplewood', c: 'bg-pathway-green' },
+              { q: 'They found a slow leak on their first visit. Fixed it in 5 minutes. Saved me hundreds.', n: 'Robert C.', l: 'Oak Ridge', c: 'bg-amber-porch' },
+              { q: 'Safe, reliable, unpretentious. My technician is like family now.', n: 'Evelyn G.', l: 'Westside', c: 'bg-deep-forest' },
+              { q: 'The digital report they send is fantastic. I can see exactly what was checked and fixed.', n: 'Michael T.', l: 'Downtown', c: 'bg-pathway-green' },
+              { q: 'Best investment for my home. No more panicking when something breaks.', n: 'Jessica W.', l: 'North Hills', c: 'bg-amber-porch' },
+              { q: 'Wayside gave me my weekends back. As a new homeowner, I was completely overwhelmed.', n: 'Sarah M.', l: 'Maplewood', c: 'bg-pathway-green' },
+              { q: 'They found a slow leak on their first visit. Fixed it in 5 minutes. Saved me hundreds.', n: 'Robert C.', l: 'Oak Ridge', c: 'bg-amber-porch' },
+              { q: 'Safe, reliable, unpretentious. My technician is like family now.', n: 'Evelyn G.', l: 'Westside', c: 'bg-deep-forest' },
+              { q: 'The digital report they send is fantastic. I can see exactly what was checked and fixed.', n: 'Michael T.', l: 'Downtown', c: 'bg-pathway-green' },
+              { q: 'Best investment for my home. No more panicking when something breaks.', n: 'Jessica W.', l: 'North Hills', c: 'bg-amber-porch' },
+            ].map((t, i) => (
+              <div key={i} className="bg-white rounded-2xl p-8 flex flex-col justify-between w-[320px] md:w-[420px] flex-shrink-0 shadow-sm border border-transparent hover:border-pathway-green/20 transition-colors duration-300">
                 <div>
-                  <div className="font-medium text-deep-forest">{t.name}</div>
-                  <div className="text-sm text-slate-text/70">{t.city}</div>
+                  <div className="flex gap-0.5 mb-5">
+                    {[...Array(5)].map((_, j) => (
+                      <svg key={j} className="w-4 h-4 text-amber-porch" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    ))}
+                  </div>
+                  <p className="text-deep-forest leading-relaxed mb-8">"{t.q}"</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 ${t.c} rounded-full flex items-center justify-center text-white text-xs font-bold`}>{t.n.charAt(0)}{t.n.split(' ')[1]?.charAt(0)}</div>
+                  <div>
+                    <div className="font-medium text-deep-forest text-sm">{t.n}</div>
+                    <div className="text-xs text-slate-text/60">{t.l}</div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
+        </div>
       </section>
 
-      {/* FAQ Section */}
-      <section id="faq" className="py-24 px-10 bg-white border-t border-black/5">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl font-medium text-deep-forest mb-12">Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            <FAQItem 
-              question="What exactly happens during a visit?" 
-              answer="Your technician will go through a 20-point checklist including all standard services (AC filters, light bulbs, etc.) plus any extra small tasks you've requested. We finish with a visual safety sweep and leave you a digital report."
-            />
-            <FAQItem 
-              question="Can I add extra tasks?" 
-              answer="Yes! As long as it's a 'maintenance' task (like tightening a cabinet door or oiling a squeaky hinge) and can be done within your monthly slot, we're happy to help at no extra charge."
-            />
-            <FAQItem 
-              question="Are you licensed and insured?" 
-              answer="Absolutely. Every technician is fully insured and we maintain all necessary state and local licensing for home maintenance services."
-            />
-            <FAQItem 
-              question="What if I need to skip a month?" 
-              answer="No problem. You can pause or cancel your subscription at any time via your online dashboard. There are no fees for skipping or canceling."
-            />
-            <FAQItem 
-              question="What areas do you serve?" 
-              answer="We currently serve the greater metro area and surrounding suburbs. Enter your zip code during signup to see if we're in your neighborhood yet."
-            />
-          </div>
+      {/* FAQ */}
+      <section id="faq" className="relative z-[4] bg-white -mt-12 sm:-mt-16 pt-36 md:pt-48 pb-24 md:pb-32 px-6 rounded-b-[3rem] sm:rounded-b-[4rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight mb-12">Common questions</h2>
+          <FAQ q="What happens during a visit?" a="Your technician goes through a 20-point checklist: AC filters, light bulbs, plumbing check, and more. We finish with a safety sweep and send you a digital report." />
+          <FAQ q="Can I add extra tasks?" a="Yes! If it's a maintenance task (tightening a cabinet, oiling a hinge) and fits within your monthly slot, we handle it at no extra charge." />
+          <FAQ q="Are you licensed and insured?" a="Absolutely. Every technician is fully insured and we maintain all necessary state and local licensing." />
+          <FAQ q="What if I need to skip a month?" a="No problem. Pause anytime via your dashboard. No fees for skipping." />
+          <FAQ q="What areas do you serve?" a="We currently serve the greater metro area and surrounding suburbs. Enter your zip code during signup to check coverage." />
+        </div>
+      </section>
+
+
+      {/* Final CTA */}
+      <section className="relative z-[3] bg-deep-forest -mt-12 sm:-mt-16 pt-36 md:pt-48 pb-24 md:pb-32 px-6">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-medium text-white leading-tight mb-4">Ready to stop worrying about your home?</h2>
+          <p className="text-white/50 mb-10 text-lg">Join 500+ Reno homeowners who already have peace of mind.</p>
+          <button onClick={() => setFormOpen(true)} className="bg-amber-porch text-white px-10 py-4 rounded-xl text-[16px] font-bold hover:brightness-110 transition-all shadow-xl shadow-amber-porch/20">
+            Start my plan
+          </button>
+
         </div>
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="bg-linen-white py-20 px-10 border-t border-black/5">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 text-left">
-          <div className="max-w-sm">
-            <div className="flex items-center gap-2.5 mb-6">
-              <Logo />
-              <span className="font-bold text-xl text-deep-forest tracking-tight">Wayside Services</span>
-            </div>
-            <p className="text-slate-text leading-relaxed">
-              Your home, handled. Premium monthly maintenance for busy homeowners who value peace of mind and proactive care.
-            </p>
+      <footer id="contact" className="bg-deep-forest border-t border-white/5 py-16 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-12">
+          <div className="max-w-xs">
+            <Logo light size="lg" />
+            <p className="text-white/40 text-sm leading-relaxed mt-5">Reno's trusted monthly home maintenance service for homeowners who value peace of mind.</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-12 w-full md:w-auto">
-            <div className="flex flex-col gap-4">
-              <h4 className="font-bold text-[10px] uppercase tracking-widest text-deep-forest/40">Navigation</h4>
-              <a href="#included" className="text-sm font-semibold text-deep-forest hover:text-pathway-green transition-colors">Included</a>
-              <a href="#how-it-works" className="text-sm font-semibold text-deep-forest hover:text-pathway-green transition-colors">How It Works</a>
-              <a href="#pricing" className="text-sm font-semibold text-deep-forest hover:text-pathway-green transition-colors">Pricing</a>
+          <div className="flex gap-16">
+            <div className="flex flex-col gap-3">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/20 mb-1">Navigate</span>
+              {['How It Works', 'Pricing', 'FAQ'].map(l => (
+                <a key={l} href={`#${l.toLowerCase().replace(/\s/g, '-')}`} className="text-sm text-white/50 hover:text-white transition-colors">{l}</a>
+              ))}
             </div>
-            <div className="flex flex-col gap-4">
-              <h4 className="font-bold text-[10px] uppercase tracking-widest text-deep-forest/40">Connect</h4>
-              <span className="text-sm font-semibold text-deep-forest">(555) 123-4567</span>
-              <span className="text-sm font-semibold text-deep-forest">hello@wayside.com</span>
+            <div className="flex flex-col gap-3">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/20 mb-1">Contact</span>
+              <span className="text-sm text-white/50">(555) 123-4567</span>
+              <span className="text-sm text-white/50">hello@wayside.com</span>
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto pt-12 mt-12 border-t border-black/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-deep-forest/40 uppercase tracking-widest">
+        <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-4 text-[11px] text-white/20">
           <span>© {new Date().getFullYear()} Wayside Services Inc.</span>
           <div className="flex gap-6">
             <span>Instagram</span>

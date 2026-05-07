@@ -2,26 +2,54 @@
 
 @theme {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  
+
   --color-pathway-green: #1D9E75;
   --color-deep-forest: #1B3A2D;
   --color-amber-porch: #EF9F27;
-  --color-linen-white: #F1EFE8;
-  --color-slate-text: #5F5E5A;
+  --color-linen-white: #F7F6F2;
+  --color-slate-text: #6B6B66;
 
-  --shadow-subtle: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-subtle: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 @layer base {
   body {
-    @apply bg-linen-white text-slate-text font-sans antialiased;
+    @apply bg-white text-slate-text font-sans antialiased;
   }
 
   h1, h2, h3, h4 {
     @apply text-deep-forest font-medium tracking-tight;
   }
+
+  button, a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  ::selection {
+    background: #1D9E7530;
+  }
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+@media (max-width: 767px) {
+  footer { padding-bottom: 80px; }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
