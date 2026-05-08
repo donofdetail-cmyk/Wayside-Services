@@ -548,7 +548,7 @@ export default function App() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-12">
           <div className="max-w-xs">
             <Logo light size="lg" />
-            <p className="text-white/40 text-sm leading-relaxed mt-5">Reno's trusted monthly home maintenance service for homeowners who value peace of mind.</p>
+            <p className="text-white/40 text-sm leading-relaxed mt-5">Proactive home care on autopilot. We handle the upkeep so you can reclaim your weekends.</p>
           </div>
           <div className="flex gap-16">
             <div className="flex flex-col gap-3">
