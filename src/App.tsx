@@ -6,6 +6,59 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 
+const PlumbingIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <path d="M12 21C15.866 21 19 17.866 19 14C19 10.5 12 3 12 3C12 3 5 10.5 5 14C5 17.866 8.13401 21 12 21Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M14.5 13.5L20 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+    <path d="M16 11L18 9C18.5 8.5 19.5 8.5 20 9V11L17.5 13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.4"/>
+  </svg>
+);
+
+const SafetyIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <path d="M12 22S20 18 20 12V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 8v4l-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.4"/>
+  </svg>
+);
+
+const ApplianceIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" strokeWidth="1.5" />
+    <circle cx="12" cy="14" r="5" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
+    <path d="M12 14c-1 0-2-.5-2-1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+    <path d="M8 7h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    <circle cx="16" cy="7" r="1" fill="currentColor" />
+  </svg>
+);
+
+const ExteriorIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <path d="M3 10l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M1 10h22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M8 10v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+    <path d="M16 10v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+  </svg>
+);
+
+const HVACIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M7 4v16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+    <path d="M11 4v16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+    <path d="M15 4v16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+    <path d="M3 12h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+const DoorIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="12" cy="11" r="1.5" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
+    <path d="M11.5 12.5l-.5 2.5h2l-.5-2.5" fill="currentColor" opacity="0.4"/>
+    <path d="M6 22h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
 /* Logo */
 const Logo = ({ light = false, size = 'default' }: { light?: boolean; size?: 'default' | 'lg' }) => (
   <div className="flex items-center gap-2.5">
@@ -262,24 +315,25 @@ export default function App() {
           </motion.div>
         </div>
 
-        {/* Trust Badge Cards */}
+        {/* Trust & Credibility Banner */}
         <motion.div
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="relative z-10 w-full max-w-3xl mx-auto px-6 pb-0 translate-y-12 sm:translate-y-16 -mb-12 sm:-mb-16"
+          className="relative z-10 w-full max-w-4xl mx-auto px-6 pb-0 translate-y-12 sm:translate-y-16 -mb-12 sm:-mb-16"
         >
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-xl shadow-black/10 grid grid-cols-3 divide-x divide-gray-100">
             {[
-              { platform: 'Google', rating: '4.9', reviews: '237', color: '#4285F4' },
-              { platform: 'Yelp', rating: '4.8', reviews: '184', color: '#D32323' },
-              { platform: 'BBB', rating: 'A+', reviews: '52', color: '#005A78' }
-            ].map((badge, i) => (
-              <div key={i} className="bg-white rounded-xl sm:rounded-2xl px-3 sm:px-6 py-4 sm:py-5 shadow-xl shadow-black/10 flex flex-col items-center gap-1">
-                <span className="font-bold text-xs sm:text-[15px] tracking-tight" style={{ color: badge.color }}>{badge.platform}</span>
-                <div className="flex items-center gap-1">
-                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-amber-porch" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                  <span className="text-deep-forest font-semibold text-[10px] sm:text-sm">{badge.rating} rating</span>
+              { icon: 'ti-shield-check', title: 'Fully Insured', desc: 'Comprehensive Coverage' },
+              { icon: 'ti-user-check', title: 'Vetted Pros', desc: 'Background-Checked' },
+              { icon: 'ti-map-pin', title: 'Local Experts', desc: 'Proudly Serving Reno' }
+            ].map((item, i) => (
+              <div key={i} className={`flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1.5 sm:gap-4 w-full text-center sm:text-left ${i !== 0 ? 'sm:pl-8' : ''}`}>
+                <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-pathway-green/10 flex items-center justify-center flex-shrink-0">
+                  <i className={`ti ${item.icon} text-pathway-green text-lg sm:text-2xl`} />
                 </div>
-                <span className="text-slate-text/60 text-[9px] sm:text-xs">{badge.reviews} reviews</span>
+                <div className="flex flex-col">
+                  <span className="font-bold text-deep-forest text-[11px] sm:text-base leading-tight">{item.title}</span>
+                  <span className="hidden sm:block text-slate-text/70 text-xs sm:text-sm">{item.desc}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -295,19 +349,19 @@ export default function App() {
           <p className="text-slate-text max-w-lg mb-14">Each month, your dedicated technician works through a comprehensive checklist tailored to your home.</p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[1fr]">
             {[
-              { icon: 'ti-droplet', title: 'Plumbing Upkeep', desc: 'Drain clearing, visual fixture checks, shower head descaling, water heater flushes, and caulking inspections.', span: 'md:col-span-2 md:row-span-2', large: true, bg: 'bg-deep-forest text-white', textTitle: 'text-white', textDesc: 'text-white/70', iconBg: 'bg-white/10', iconColor: 'text-white', border: 'border-deep-forest hover:border-pathway-green' },
-              { icon: 'ti-bulb', title: 'Safety & Detectors', desc: 'Visual light switch & receptacle checks, smoke/CO detector battery testing, dryer vent cleaning, and fireplace visual checks.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
-              { icon: 'ti-plug', title: 'Household Appliance Care', desc: 'Washing machine & disposal cleaning, seasonal ceiling fan adjustments, and insulation checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
-              { icon: 'ti-home', title: 'Seasonal Exterior Checks', desc: 'Visual gutter inspections, exterior faucet winterization, and siding/fence condition checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
-              { icon: 'ti-wind', title: 'HVAC Filter Replacement', desc: 'We handle the hassle of swapping your fresh air and intake filters regularly so you don\'t have to.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
-              { icon: 'ti-lock', title: 'Doors, Locks & Seals', desc: 'Weather seal checks, door functionality testing, and garage door bottom seal inspections.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: PlumbingIcon, title: 'Plumbing Upkeep', desc: 'Drain clearing, visual fixture checks, shower head descaling, water heater flushes, and caulking inspections.', span: 'md:col-span-2 md:row-span-2', large: true, bg: 'bg-deep-forest text-white', textTitle: 'text-white', textDesc: 'text-white/70', iconBg: 'bg-white/10', iconColor: 'text-white', border: 'border-deep-forest hover:border-pathway-green' },
+              { icon: SafetyIcon, title: 'Safety & Detectors', desc: 'Visual light switch & receptacle checks, smoke/CO detector battery testing, dryer vent cleaning, and fireplace visual checks.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: ApplianceIcon, title: 'Household Appliance Care', desc: 'Washing machine & disposal cleaning, seasonal ceiling fan adjustments, and insulation checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
+              { icon: ExteriorIcon, title: 'Seasonal Exterior Checks', desc: 'Visual gutter inspections, exterior faucet winterization, and siding/fence condition checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
+              { icon: HVACIcon, title: 'HVAC Filter Replacement', desc: 'We handle the hassle of swapping your fresh air and intake filters regularly so you don\'t have to.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: DoorIcon, title: 'Doors, Locks & Seals', desc: 'Weather seal checks, door functionality testing, and garage door bottom seal inspections.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
             ].map((s, i) => (
               <div key={i} className={`group p-6 md:p-8 rounded-3xl border ${s.border} transition-all duration-300 relative overflow-hidden flex flex-col ${s.bg} ${s.span} hover:shadow-xl hover:-translate-y-1`}>
                 {s.large && <div className="absolute top-0 right-0 w-64 h-64 bg-pathway-green/20 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-pathway-green/30 transition-colors duration-500" />}
                 {!s.large && <div className="absolute top-0 right-0 w-32 h-32 bg-pathway-green/5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-pathway-green/10 transition-colors duration-500" />}
                 
                 <div className={`rounded-2xl flex items-center justify-center mb-auto shadow-sm backdrop-blur-sm group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ${s.iconBg} ${s.large ? 'w-16 h-16 mb-12' : 'w-12 h-12 mb-6'}`}>
-                  <i className={`ti ${s.icon} ${s.iconColor} ${s.large ? 'text-3xl' : 'text-xl'}`} />
+                  <s.icon className={`${s.iconColor} ${s.large ? 'w-8 h-8' : 'w-6 h-6'}`} />
                 </div>
                 <div className={`${s.large ? 'mt-auto' : ''} relative z-10`}>
                   <h3 className={`font-semibold mb-2 ${s.textTitle} ${s.large ? 'text-2xl' : 'text-lg'}`}>{s.title}</h3>
