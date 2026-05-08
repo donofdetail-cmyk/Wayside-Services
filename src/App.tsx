@@ -295,12 +295,12 @@ export default function App() {
           <p className="text-slate-text max-w-lg mb-14">Each month, your dedicated technician works through a comprehensive checklist tailored to your home.</p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[1fr]">
             {[
-              { icon: 'ti-report', title: 'Digital Home Report', desc: 'Photos, notes, and recommendations sent to you after every single visit. Fully transparent, archived for your records, and easy to share.', span: 'md:col-span-2 md:row-span-2', large: true, bg: 'bg-deep-forest text-white', textTitle: 'text-white', textDesc: 'text-white/70', iconBg: 'bg-white/10', iconColor: 'text-white', border: 'border-deep-forest hover:border-pathway-green' },
-              { icon: 'ti-bulb', title: 'Lighting & Fixture Upkeep', desc: 'Bulb swaps (up to 2 per visit), fixture checks, and visual inspections of outlets and switches.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
-              { icon: 'ti-droplet', title: 'Proactive Leak Detection', desc: 'Leak detection under sinks, toilet inspections, and water heater checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
-              { icon: 'ti-home', title: 'Exterior Perimeter Inspection', desc: 'Gutters, downspouts, and a visual check of siding and entry points.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
-              { icon: 'ti-air-conditioning', title: 'Air Quality Management', desc: 'Filter replacements (1 intake, 1 fresh air) and visual system checks to keep your air clean and running efficiently.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
-              { icon: 'ti-lock', title: 'Safety Sensor Verification', desc: 'Smoke detector battery tests, door lock checks, and carbon monoxide sensor verification.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: 'ti-droplet', title: 'Plumbing Upkeep', desc: 'Drain clearing, visual fixture checks, shower head descaling, water heater flushes, and caulking inspections.', span: 'md:col-span-2 md:row-span-2', large: true, bg: 'bg-deep-forest text-white', textTitle: 'text-white', textDesc: 'text-white/70', iconBg: 'bg-white/10', iconColor: 'text-white', border: 'border-deep-forest hover:border-pathway-green' },
+              { icon: 'ti-bulb', title: 'Safety & Detectors', desc: 'Visual light switch & receptacle checks, smoke/CO detector battery testing, dryer vent cleaning, and fireplace visual checks.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: 'ti-plug', title: 'Household Appliance Care', desc: 'Washing machine & disposal cleaning, seasonal ceiling fan adjustments, and insulation checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
+              { icon: 'ti-home', title: 'Seasonal Exterior Checks', desc: 'Visual gutter inspections, exterior faucet winterization, and siding/fence condition checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
+              { icon: 'ti-wind', title: 'HVAC Filter Replacement', desc: 'We handle the hassle of swapping your fresh air and intake filters regularly so you don\'t have to.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: 'ti-lock', title: 'Doors, Locks & Seals', desc: 'Weather seal checks, door functionality testing, and garage door bottom seal inspections.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
             ].map((s, i) => (
               <div key={i} className={`group p-6 md:p-8 rounded-3xl border ${s.border} transition-all duration-300 relative overflow-hidden flex flex-col ${s.bg} ${s.span} hover:shadow-xl hover:-translate-y-1`}>
                 {s.large && <div className="absolute top-0 right-0 w-64 h-64 bg-pathway-green/20 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-pathway-green/30 transition-colors duration-500" />}
@@ -327,7 +327,7 @@ export default function App() {
           <div className="w-10 h-10 rounded-full bg-pathway-green/15 flex items-center justify-center flex-shrink-0">
             <i className="ti ti-shield-check text-pathway-green text-xl" />
           </div>
-          <p className="text-white/80 text-sm"><strong className="text-white">100% Satisfaction Guarantee.</strong> Not happy after your first visit? Full refund. Proudly serving Reno homeowners.</p>
+          <p className="text-white/80 text-sm"><strong className="text-white">Professional Service Guarantee.</strong> We stand by the quality of our work on every single visit. Proudly serving Reno homeowners.</p>
         </div>
       </section>
 
@@ -342,9 +342,9 @@ export default function App() {
           <div className="relative max-w-3xl mx-auto mt-16 pb-8">
             <div className="flex flex-col gap-12 md:gap-20">
               {[
-                { n: '01', title: 'Fill out a quick form', desc: 'Share a few details about your home so we know exactly what to expect on our first visit.' },
-                { n: '02', title: 'Subscribe to the service', desc: 'Sign up for our simple monthly plan based on your home\'s footprint.' },
-                { n: '03', title: 'Live in peace', desc: 'Rest easy knowing a trusted professional is proactively maintaining your home every month.' }
+                { n: '01', title: 'Choose your plan', desc: 'Select the transparent, flat-rate tier that fits your home\'s square footage. No hidden fees, no surprise estimates.' },
+                { n: '02', title: 'Meet your dedicated pro', desc: 'We will assign a trusted, local technician who will learn exactly how your home operates inside and out.' },
+                { n: '03', title: 'Reclaim your weekends', desc: 'Never spend another Saturday worrying about household upkeep. We handle the maintenance so you don\'t have to.' }
               ].map((s, i) => (
                 <motion.div 
                   key={i} 
@@ -389,18 +389,18 @@ export default function App() {
 
       {/* Pricing */}
       <section id="pricing" className="relative z-10 bg-white -mt-12 sm:-mt-16 pt-24 sm:pt-28 pb-24 md:pb-32 px-6 rounded-b-[3rem] sm:rounded-b-[4rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight mb-3">Simple, transparent pricing.</h2>
-          <p className="text-slate-text mb-12 max-w-md mx-auto">Choose the flat-rate plan that fits your home's footprint. No hidden fees.</p>
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight mb-3">Home maintenance, one flat rate.</h2>
+          <p className="text-slate-text mb-12 max-w-lg mx-auto">Keep your home running smoothly with a predictable monthly subscription covering all your upkeep.</p>
 
-          <div className="bg-deep-forest rounded-3xl p-8 md:p-12 text-left max-w-2xl mx-auto">
+          <div className="bg-deep-forest rounded-3xl p-8 md:p-12 text-left max-w-3xl mx-auto">
             
             <div className="flex flex-col md:flex-row gap-8 mb-10 pb-10 border-b border-white/10">
               <div className="flex-1">
                 <h3 className="text-white font-bold text-xl mb-1">Single Story</h3>
-                <p className="text-white/60 text-sm mb-4">4 beds, 2 baths, or less</p>
+                <p className="text-white/60 text-sm mb-4">Up to 2,500 sq ft</p>
                 <div className="flex items-end gap-1">
-                  <span className="text-5xl font-bold text-white">$99<span className="text-3xl">.99</span></span>
+                  <span className="text-5xl font-bold text-white">$99</span>
                   <span className="text-white/40 text-base mb-1">/mo</span>
                 </div>
               </div>
@@ -408,20 +408,23 @@ export default function App() {
               <div className="md:hidden h-px bg-white/10" />
               <div className="flex-1">
                 <h3 className="text-white font-bold text-xl mb-1">Two Story</h3>
-                <p className="text-white/60 text-sm mb-4">Standard 2-story layout</p>
+                <p className="text-white/60 text-sm mb-4">2,500+ sq ft</p>
                 <div className="flex items-end gap-1">
-                  <span className="text-5xl font-bold text-white">$129<span className="text-3xl">.99</span></span>
+                  <span className="text-5xl font-bold text-white">$129</span>
                   <span className="text-white/40 text-base mb-1">/mo</span>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mb-10">
+            <div className="mb-6 text-white/80 font-semibold border-b border-white/10 pb-4">Monthly Checklists Include:</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-10">
               {[
-                'Lighting & fixture upkeep', 'Air quality management',
-                'Proactive leak detection', 'Exterior perimeter inspection',
-                'Safety sensor verification', 'Digital home report',
-                '2 bulbs included each monthly visit', '1 intake & 1 fresh air filter included each monthly visit'
+                'Drain Clearing & Visual Fixture Checks', 'Water Heater Flushes & Descaling',
+                'Smoke/CO Detector Testing & Battery Swaps', 'Dryer Vent & Fireplace Checks',
+                'Visual Receptacle & Light Switch Checks', 'Air Filter Replacements',
+                'Visual Gutter & Soffit Vent Checks', 'Exterior Faucet Winterization',
+                'Disposal & Washing Machine Upkeep', 'Seasonal Fan Adjustments & Insulation Checks',
+                'Weather Seal & Window Lock Checks', 'Door Functionality & Garage Seal Checks'
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2.5 text-sm text-white/80">
                   <svg className="w-4 h-4 text-pathway-green flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
@@ -491,10 +494,9 @@ export default function App() {
       <section id="faq" className="relative z-[4] bg-white -mt-12 sm:-mt-16 pt-36 md:pt-48 pb-24 md:pb-32 px-6 rounded-b-[3rem] sm:rounded-b-[4rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight mb-12">Common questions</h2>
-          <FAQ q="What happens during a visit?" a="Your technician goes through a 20-point checklist: AC filters, light bulbs, plumbing check, and more. We finish with a safety sweep and send you a digital report." />
-          <FAQ q="Can I add extra tasks?" a="Yes! If it's a maintenance task (tightening a cabinet, oiling a hinge) and fits within your monthly slot, we handle it at no extra charge." />
+          <FAQ q="What happens during a visit?" a="Your technician works through your home's monthly checklist. We handle routine visual checks, filter swaps, and whatever seasonal or annual maintenance tasks are scheduled for that month. We finish with a safety sweep and send you a digital report." />
+          <FAQ q="Do you perform all of the listed services every single month?" a="No. While some tasks (like filter replacements and visual safety checks) happen monthly, others (like water heater flushes, exterior winterization, or deep appliance cleaning) are scheduled annually or seasonally. Your flat monthly rate covers a rotating year-round checklist to ensure nothing is ever missed." />
           <FAQ q="Are you licensed and insured?" a="Absolutely. Every technician is fully insured and we maintain all necessary state and local licensing." />
-          <FAQ q="What if I need to skip a month?" a="No problem. Pause anytime via your dashboard. No fees for skipping." />
           <FAQ q="What areas do you serve?" a="We currently serve the greater metro area and surrounding suburbs. Enter your zip code during signup to check coverage." />
         </div>
       </section>
@@ -535,11 +537,6 @@ export default function App() {
         </div>
         <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-4 text-[11px] text-white/20">
           <span>© {new Date().getFullYear()} Wayside Services Inc.</span>
-          <div className="flex gap-6">
-            <span>Instagram</span>
-            <span>Twitter</span>
-            <span>LinkedIn</span>
-          </div>
         </div>
       </footer>
     </div>
