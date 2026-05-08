@@ -76,23 +76,6 @@ const Logo = ({ light = false, size = 'default' }: { light?: boolean; size?: 'de
   </div>
 );
 
-/* Sticky Mobile CTA */
-const StickyCTA = ({ show }: { show: boolean }) => (
-  <AnimatePresence>
-    {show && (
-      <motion.div
-        initial={{ y: 80 }} animate={{ y: 0 }} exit={{ y: 80 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-        className="fixed bottom-0 inset-x-0 z-50 md:hidden p-3 bg-white/80 backdrop-blur-xl border-t border-black/5"
-      >
-        <button onClick={() => (window as any).__openForm?.()} className="w-full bg-deep-forest text-white py-4 rounded-xl font-bold text-[15px] active:scale-[0.98] transition-transform">
-          Start my plan
-        </button>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
-
 /* FAQ Item */
 const FAQ = ({ q, a }: { q: string; a: string }) => {
   const [open, setOpen] = useState(false);
@@ -236,20 +219,12 @@ const QuestionnaireModal = ({ open, onClose }: { open: boolean; onClose: () => v
 /* Main */
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
-  const [showSticky, setShowSticky] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => setShowSticky(!e.isIntersecting), { threshold: 0 });
-    if (heroRef.current) obs.observe(heroRef.current);
-    return () => obs.disconnect();
   }, []);
 
   useEffect(() => {
@@ -284,9 +259,8 @@ export default function App() {
         </div>
       </nav>
 
-      <StickyCTA show={showSticky} />
-
       {/* Hero */}
+      <main>
       <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center z-50">
         <div className="absolute inset-0 rounded-b-[3rem] sm:rounded-b-[4rem] overflow-hidden shadow-2xl -z-10">
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/hero-bg.png')" }} />
@@ -308,9 +282,9 @@ export default function App() {
             Need reliable home maintenance in Reno, Nevada? Wayside Services handles the small stuff before it becomes expensive stuff. One monthly visit, one flat rate, exceptional service every time.
           </motion.p>
 
-          <motion.div ref={heroRef} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="w-full flex justify-center px-4">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="w-full flex justify-center px-4">
             <a href="#pricing" className="w-full sm:w-auto bg-amber-porch text-white px-12 py-5 rounded-full text-base md:text-[15px] font-bold hover:brightness-110 transition-all shadow-xl shadow-amber-porch/25 max-w-sm">
-              Get a Free Estimate
+              View Our Plans
             </a>
           </motion.div>
         </div>
@@ -560,13 +534,14 @@ export default function App() {
       <section className="relative z-[3] bg-deep-forest -mt-12 sm:-mt-16 pt-36 md:pt-48 pb-24 md:pb-32 px-6">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-medium text-white leading-tight mb-4">Ready to stop worrying about your home?</h2>
-          <p className="text-white/50 mb-10 text-lg">Join 500+ Reno homeowners who already have peace of mind.</p>
+          <p className="text-white/50 mb-10 text-lg">Join your neighbors in Reno who already have peace of mind.</p>
           <button onClick={() => setFormOpen(true)} className="bg-amber-porch text-white px-10 py-4 rounded-xl text-[16px] font-bold hover:brightness-110 transition-all shadow-xl shadow-amber-porch/20">
             Start my plan
           </button>
 
         </div>
       </section>
+      </main>
 
       {/* Footer */}
       <footer id="contact" className="bg-deep-forest border-t border-white/5 py-16 px-6">
