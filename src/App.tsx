@@ -21,13 +21,12 @@ const SafetyIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const ApplianceIcon = ({ className }: { className?: string }) => (
+const ReportIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className}>
     <rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" strokeWidth="1.5" />
-    <circle cx="12" cy="14" r="5" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
-    <path d="M12 14c-1 0-2-.5-2-1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
-    <path d="M8 7h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    <circle cx="16" cy="7" r="1" fill="currentColor" />
+    <path d="M9 7h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M9 11h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
+    <path d="M9 15h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
   </svg>
 );
 
@@ -101,11 +100,10 @@ const FAQ = ({ q, a }: { q: string; a: string }) => {
 /* Questionnaire Modal */
 const QuestionnaireModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({ concern: '', homeType: '', name: '', phone: '' });
+  const [answers, setAnswers] = useState({ concern: '', homeType: '', name: '', phone: '', email: '' });
 
   const concerns = [
     { label: 'Preventive maintenance', icon: 'ti-shield-check' },
-    { label: 'Something specific needs fixing', icon: 'ti-tool' },
     { label: 'Just moved in, need a checkup', icon: 'ti-home' },
     { label: 'Not sure yet, exploring options', icon: 'ti-search' }
   ];
@@ -117,7 +115,7 @@ const QuestionnaireModal = ({ open, onClose }: { open: boolean; onClose: () => v
     { label: 'Other', icon: 'ti-dots' }
   ];
 
-  const reset = () => { setStep(0); setAnswers({ concern: '', homeType: '', name: '', phone: '' }); };
+  const reset = () => { setStep(0); setAnswers({ concern: '', homeType: '', name: '', phone: '', email: '' }); };
 
   return (
     <AnimatePresence>
@@ -152,7 +150,7 @@ const QuestionnaireModal = ({ open, onClose }: { open: boolean; onClose: () => v
               <AnimatePresence mode="wait">
                 {step === 0 && (
                   <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
-                    <h3 className="text-xl font-semibold text-deep-forest mb-2">What brings you to Wayside?</h3>
+                    <h3 className="text-xl font-semibold text-deep-forest mb-2">What brings you to Wayside Services?</h3>
                     <p className="text-slate-text text-sm mb-6">Help us understand how we can best serve your home.</p>
                     <div className="flex flex-col gap-2">
                       {concerns.map((c) => (
@@ -197,11 +195,14 @@ const QuestionnaireModal = ({ open, onClose }: { open: boolean; onClose: () => v
                       <input type="text" placeholder="Full name" required value={answers.name} onChange={e => setAnswers(a => ({...a, name: e.target.value}))}
                         className="w-full px-4 py-3.5 rounded-xl border border-deep-forest/10 text-deep-forest text-sm placeholder:text-slate-text/50 focus:outline-none focus:border-pathway-green focus:ring-2 focus:ring-pathway-green/10 transition-all bg-linen-white/50"
                       />
+                      <input type="email" placeholder="Email address" required value={answers.email} onChange={e => setAnswers(a => ({...a, email: e.target.value}))}
+                        className="w-full px-4 py-3.5 rounded-xl border border-deep-forest/10 text-deep-forest text-sm placeholder:text-slate-text/50 focus:outline-none focus:border-pathway-green focus:ring-2 focus:ring-pathway-green/10 transition-all bg-linen-white/50"
+                      />
                       <input type="tel" placeholder="Phone number" required value={answers.phone} onChange={e => setAnswers(a => ({...a, phone: e.target.value}))}
                         className="w-full px-4 py-3.5 rounded-xl border border-deep-forest/10 text-deep-forest text-sm placeholder:text-slate-text/50 focus:outline-none focus:border-pathway-green focus:ring-2 focus:ring-pathway-green/10 transition-all bg-linen-white/50"
                       />
                       <button type="submit" className="w-full bg-amber-porch text-white py-4 rounded-xl font-bold text-[15px] hover:brightness-110 transition-all shadow-lg shadow-amber-porch/20 mt-1">
-                        Get my free estimate
+                        Submit
                       </button>
                     </form>
                     <button onClick={() => setStep(1)} className="mt-4 text-slate-text/50 text-sm hover:text-deep-forest transition-colors">← Back</button>
@@ -272,14 +273,14 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
             className="text-[clamp(2rem,5.5vw,3.8rem)] font-semibold text-white leading-[1.12] tracking-tight mb-6"
           >
-            Home Maintenance Services{' '}
+            Preventative Home Concierge{' '}
             Serving the Greater Reno Area
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
             className="text-white/70 text-base md:text-lg leading-relaxed mb-10 max-w-2xl mx-auto"
           >
-            Need reliable home maintenance in Reno, Nevada? Wayside Services handles the small stuff before it becomes expensive stuff. One monthly visit, one flat rate, exceptional service every time.
+            Professional eyes on your home every month. We handle essential preventative maintenance and oversight so you can avoid expensive repairs and reclaim your weekends.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="w-full flex justify-center px-4">
@@ -320,15 +321,15 @@ export default function App() {
           <div className="max-w-xl mb-6">
             <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight">What every visit covers</h2>
           </div>
-          <p className="text-slate-text max-w-lg mb-14">Each month, your dedicated technician works through a comprehensive checklist tailored to your home.</p>
+          <p className="text-slate-text max-w-lg mb-14">Each month, your dedicated technician completes our 10-point core wellness checklist, plus one rotating seasonal preventative task to keep your home protected.</p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[1fr]">
             {[
-              { icon: PlumbingIcon, title: 'Plumbing Upkeep', desc: 'Drain clearing, visual fixture checks, shower head descaling, water heater flushes, and caulking inspections.', span: 'md:col-span-2 md:row-span-2', large: true, bg: 'bg-deep-forest text-white', textTitle: 'text-white', textDesc: 'text-white/70', iconBg: 'bg-white/10', iconColor: 'text-white', border: 'border-deep-forest hover:border-pathway-green' },
-              { icon: SafetyIcon, title: 'Safety & Detectors', desc: 'Visual light switch & receptacle checks, smoke/CO detector battery testing, dryer vent cleaning, and fireplace visual checks.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
-              { icon: ApplianceIcon, title: 'Household Appliance Care', desc: 'Washing machine & disposal cleaning, seasonal ceiling fan adjustments, and insulation checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
-              { icon: ExteriorIcon, title: 'Seasonal Exterior Checks', desc: 'Visual gutter inspections, exterior faucet winterization, and siding/fence condition checks.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
-              { icon: HVACIcon, title: 'HVAC Filter Replacement', desc: 'We handle the hassle of swapping your fresh air and intake filters regularly so you don\'t have to.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
-              { icon: DoorIcon, title: 'Doors, Locks & Seals', desc: 'Weather seal checks, door functionality testing, and garage door bottom seal inspections.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: PlumbingIcon, title: 'Plumbing & Fixtures', desc: 'Visual plumbing leak inspections and thorough performance checks for all faucets and fixtures.', span: 'md:col-span-2 md:row-span-2', large: true, bg: 'bg-deep-forest text-white', textTitle: 'text-white', textDesc: 'text-white/70', iconBg: 'bg-white/10', iconColor: 'text-white', border: 'border-deep-forest hover:border-pathway-green' },
+              { icon: SafetyIcon, title: 'Safety & Electrical', desc: 'Safety checks for light switches and receptacles, plus smoke and carbon monoxide detector status checks.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: HVACIcon, title: 'HVAC Air Filters', desc: 'Routine HVAC air filter inspections and replacements.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
+              { icon: ExteriorIcon, title: 'Exterior Scan', desc: 'Visual walk-around to identify potential exterior issues.', span: 'md:col-span-1 md:row-span-1', bg: 'bg-linen-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-white', iconColor: 'text-pathway-green', border: 'border-transparent hover:border-pathway-green/20' },
+              { icon: DoorIcon, title: 'Doors, Windows & Seals', desc: 'Operation checks for doors, windows, and garage doors, plus weather seal inspections.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
+              { icon: ReportIcon, title: 'Digital Reporting', desc: 'Receive a digital visit summary with complete maintenance notes after every visit.', span: 'md:col-span-2 md:row-span-1', bg: 'bg-white', textTitle: 'text-deep-forest', textDesc: 'text-slate-text', iconBg: 'bg-pathway-green/10', iconColor: 'text-pathway-green', border: 'border-deep-forest/5 hover:border-pathway-green/20' },
             ].map((s, i) => (
               <div key={i} className={`group p-6 md:p-8 rounded-3xl border ${s.border} transition-all duration-300 relative overflow-hidden flex flex-col ${s.bg} ${s.span} hover:shadow-xl hover:-translate-y-1`}>
                 {s.large && <div className="absolute top-0 right-0 w-64 h-64 bg-pathway-green/20 rounded-full blur-[80px] -mr-20 -mt-20 group-hover:bg-pathway-green/30 transition-colors duration-500" />}
@@ -372,7 +373,7 @@ export default function App() {
               {[
                 { n: '01', title: 'Choose your plan', desc: 'Select the transparent, flat-rate tier that fits your home\'s square footage. No hidden fees, no surprise estimates.' },
                 { n: '02', title: 'Meet your dedicated pro', desc: 'We will assign a trusted, local technician who will learn exactly how your home operates inside and out.' },
-                { n: '03', title: 'Reclaim your weekends', desc: 'Never spend another Saturday worrying about household upkeep. We handle the maintenance so you don\'t have to.' }
+                { n: '03', title: 'Reclaim your weekends', desc: 'Never spend another Saturday worrying about household upkeep. We handle your home\'s preventative oversight so you don\'t have to.' }
               ].map((s, i) => (
                 <motion.div 
                   key={i} 
@@ -418,8 +419,8 @@ export default function App() {
       {/* Pricing */}
       <section id="pricing" className="relative z-10 bg-white -mt-12 sm:-mt-16 pt-24 sm:pt-28 pb-24 md:pb-32 px-6 rounded-b-[3rem] sm:rounded-b-[4rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight mb-3">Home maintenance, one flat rate.</h2>
-          <p className="text-slate-text mb-12 max-w-lg mx-auto">Keep your home running smoothly with a predictable monthly subscription covering all your upkeep.</p>
+          <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight mb-3">Home wellness, one flat rate.</h2>
+          <p className="text-slate-text mb-12 max-w-lg mx-auto">Keep your home running smoothly with a predictable monthly subscription covering your essential preventative oversight.</p>
 
           <div className="bg-deep-forest rounded-3xl p-8 md:p-12 text-left max-w-3xl mx-auto">
             
@@ -447,18 +448,41 @@ export default function App() {
             <div className="mb-6 text-white/80 font-semibold border-b border-white/10 pb-4">Monthly Checklists Include:</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-10">
               {[
-                'Drain Clearing & Visual Fixture Checks', 'Water Heater Flushes & Descaling',
-                'Smoke/CO Detector Testing & Battery Swaps', 'Dryer Vent & Fireplace Checks',
-                'Visual Receptacle & Light Switch Checks', 'Air Filter Replacements',
-                'Visual Gutter & Soffit Vent Checks', 'Exterior Faucet Winterization',
-                'Disposal & Washing Machine Upkeep', 'Seasonal Fan Adjustments & Insulation Checks',
-                'Weather Seal & Window Lock Checks', 'Door Functionality & Garage Seal Checks'
+                'HVAC air filter inspection & replacement',
+                'Visual plumbing leak inspection',
+                'Faucet & fixture performance check',
+                'Light switch & receptacle safety check',
+                'Smoke & carbon monoxide detector status check',
+                'Door & window operation check',
+                'Garage door seal & functionality check',
+                'Exterior visual walk-around',
+                'Weather seal inspection',
+                'Digital visit summary & maintenance notes',
+                '+ One rotating seasonal preventative task'
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2.5 text-sm text-white/80">
                   <svg className="w-4 h-4 text-pathway-green flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
                   {item}
                 </div>
               ))}
+            </div>
+
+            <div className="mb-10 pt-8 border-t border-white/10">
+              <div className="mb-3 text-white/80 font-semibold">Member Add-On Services</div>
+              <p className="text-white/50 text-sm mb-5 leading-relaxed">
+                When your home needs deeper preventative care, members get priority access and preferred pricing on additional services:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+                {[
+                  'Dryer Vent Cleaning', 'Water Heater Flushing', 'Drain Clearing',
+                  'Gutter Cleaning', 'Caulking & Sealing', 'Appliance Maintenance'
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2.5 text-sm text-white/50">
+                    <div className="w-1.5 h-1.5 rounded-full bg-white/20 flex-shrink-0" />
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
 
             <button onClick={() => setFormOpen(true)} className="w-full bg-amber-porch text-white py-4 rounded-xl font-bold text-[16px] hover:brightness-110 transition-all shadow-xl shadow-amber-porch/20">
@@ -476,7 +500,7 @@ export default function App() {
       <section className="relative z-[5] bg-linen-white -mt-12 sm:-mt-16 pt-36 md:pt-48 pb-24 md:pb-32 px-6 rounded-b-[3rem] sm:rounded-b-[4rem]">
         <div className="max-w-6xl mx-auto">
           <div className="max-w-xl mb-16">
-            <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight">Hear from homeowners<br/>already on Wayside</h2>
+            <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight">Hear from homeowners<br/>already on Wayside Services</h2>
           </div>
         <div className="relative w-full max-w-[100vw] overflow-hidden px-0">
           <div className="absolute top-0 left-0 bottom-0 w-20 md:w-48 bg-gradient-to-r from-linen-white to-transparent z-10 pointer-events-none" />
@@ -484,16 +508,16 @@ export default function App() {
 
           <div className="flex w-max animate-marquee gap-6">
             {[
-              { q: 'Wayside gave me my weekends back. As a new homeowner, I was completely overwhelmed.', n: 'Sarah M.', l: 'Maplewood', c: 'bg-pathway-green' },
-              { q: 'They found a slow leak on their first visit. Fixed it in 5 minutes. Saved me hundreds.', n: 'Robert C.', l: 'Oak Ridge', c: 'bg-amber-porch' },
-              { q: 'Safe, reliable, unpretentious. My technician is like family now.', n: 'Evelyn G.', l: 'Westside', c: 'bg-deep-forest' },
-              { q: 'The digital report they send is fantastic. I can see exactly what was checked and fixed.', n: 'Michael T.', l: 'Downtown', c: 'bg-pathway-green' },
-              { q: 'Best investment for my home. No more panicking when something breaks.', n: 'Jessica W.', l: 'North Hills', c: 'bg-amber-porch' },
-              { q: 'Wayside gave me my weekends back. As a new homeowner, I was completely overwhelmed.', n: 'Sarah M.', l: 'Maplewood', c: 'bg-pathway-green' },
-              { q: 'They found a slow leak on their first visit. Fixed it in 5 minutes. Saved me hundreds.', n: 'Robert C.', l: 'Oak Ridge', c: 'bg-amber-porch' },
-              { q: 'Safe, reliable, unpretentious. My technician is like family now.', n: 'Evelyn G.', l: 'Westside', c: 'bg-deep-forest' },
-              { q: 'The digital report they send is fantastic. I can see exactly what was checked and fixed.', n: 'Michael T.', l: 'Downtown', c: 'bg-pathway-green' },
-              { q: 'Best investment for my home. No more panicking when something breaks.', n: 'Jessica W.', l: 'North Hills', c: 'bg-amber-porch' },
+              { q: 'Wayside Services gave me my weekends back. As a new homeowner, I was completely overwhelmed.', n: 'Sarah M.', l: 'South Reno', c: 'bg-pathway-green' },
+              { q: 'They found a slow leak on their first visit. Fixed it in 5 minutes. Saved me hundreds.', n: 'Robert C.', l: 'Sparks', c: 'bg-amber-porch' },
+              { q: 'Safe, reliable, unpretentious. My technician is like family now.', n: 'Evelyn G.', l: 'Somersett', c: 'bg-deep-forest' },
+              { q: 'The digital report they send is fantastic. I can see exactly what was checked and fixed.', n: 'Michael T.', l: 'Midtown', c: 'bg-pathway-green' },
+              { q: 'Best investment for my home. No more panicking when something breaks.', n: 'Jessica W.', l: 'Spanish Springs', c: 'bg-amber-porch' },
+              { q: 'Wayside Services gave me my weekends back. As a new homeowner, I was completely overwhelmed.', n: 'Sarah M.', l: 'South Reno', c: 'bg-pathway-green' },
+              { q: 'They found a slow leak on their first visit. Fixed it in 5 minutes. Saved me hundreds.', n: 'Robert C.', l: 'Sparks', c: 'bg-amber-porch' },
+              { q: 'Safe, reliable, unpretentious. My technician is like family now.', n: 'Evelyn G.', l: 'Somersett', c: 'bg-deep-forest' },
+              { q: 'The digital report they send is fantastic. I can see exactly what was checked and fixed.', n: 'Michael T.', l: 'Midtown', c: 'bg-pathway-green' },
+              { q: 'Best investment for my home. No more panicking when something breaks.', n: 'Jessica W.', l: 'Spanish Springs', c: 'bg-amber-porch' },
             ].map((t, i) => (
               <div key={i} className="bg-white rounded-2xl p-8 flex flex-col justify-between w-[320px] md:w-[420px] flex-shrink-0 shadow-sm border border-transparent hover:border-pathway-green/20 transition-colors duration-300">
                 <div>
@@ -522,8 +546,10 @@ export default function App() {
       <section id="faq" className="relative z-[4] bg-white -mt-12 sm:-mt-16 pt-36 md:pt-48 pb-24 md:pb-32 px-6 rounded-b-[3rem] sm:rounded-b-[4rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-medium text-deep-forest leading-tight mb-12">Common questions</h2>
-          <FAQ q="What happens during a visit?" a="Your technician works through your home's monthly checklist. We handle routine visual checks, filter swaps, and whatever seasonal or annual maintenance tasks are scheduled for that month. We finish with a safety sweep and send you a digital report." />
-          <FAQ q="Do you perform all of the listed services every single month?" a="No. While some tasks (like filter replacements and visual safety checks) happen monthly, others (like water heater flushes, exterior winterization, or deep appliance cleaning) are scheduled annually or seasonally. Your flat monthly rate covers a rotating year-round checklist to ensure nothing is ever missed." />
+          <FAQ q="What happens during a visit?" a="Our visits are highly systemized and designed to be minimally invasive. A typical preventative sweep takes 20-30 minutes. Your technician works through your 10-point core checklist plus one rotating seasonal task, staying out of your way while ensuring your home's vital systems are monitored and protected." />
+          <FAQ q="Do you perform all of the listed services every single month?" a="Yes and no. The 10 core items (like filter replacements and visual safety checks) happen every single month. In addition, we perform one rotating seasonal task (like a winter preparation check or weather seal inspection). Your flat monthly rate covers this predictable, year-round oversight." />
+          <FAQ q="What if you find a major issue?" a="That's exactly why we're here! Our primary goal is to catch issues before they become disasters. If we spot a problem that requires significant labor or major repairs, we will immediately flag it and document it in your digital report so you can bring in a specialized contractor." />
+          <FAQ q="Do you do major repairs or remodels?" a="No. We focus strictly on preventative maintenance and safety. While we offer a few specific add-on services to our members, like dryer vent cleaning and water heater flushing, we do not take on large remodels or structural repairs. If we find a major issue, we will document it so you can bring in a specialized contractor." />
           <FAQ q="Are you licensed and insured?" a="Absolutely. Every technician is fully insured and we maintain all necessary state and local licensing." />
           <FAQ q="What areas do you serve?" a="We currently serve the greater metro area and surrounding suburbs. Enter your zip code during signup to check coverage." />
         </div>
@@ -533,7 +559,7 @@ export default function App() {
       {/* Final CTA */}
       <section className="relative z-[3] bg-deep-forest -mt-12 sm:-mt-16 pt-36 md:pt-48 pb-24 md:pb-32 px-6">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-medium text-white leading-tight mb-4">Ready to stop worrying about your home?</h2>
+          <h2 className="text-3xl md:text-4xl font-medium text-white leading-tight mb-4">Ready for proactive peace of mind?</h2>
           <p className="text-white/50 mb-10 text-lg">Join your neighbors in Reno who already have peace of mind.</p>
           <button onClick={() => setFormOpen(true)} className="bg-amber-porch text-white px-10 py-4 rounded-xl text-[16px] font-bold hover:brightness-110 transition-all shadow-xl shadow-amber-porch/20">
             Start my plan
@@ -548,7 +574,7 @@ export default function App() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-12">
           <div className="max-w-xs">
             <Logo light size="lg" />
-            <p className="text-white/40 text-sm leading-relaxed mt-5">Proactive home care on autopilot. We handle the upkeep so you can reclaim your weekends.</p>
+            <p className="text-white/40 text-sm leading-relaxed mt-5">Proactive home care on autopilot. We handle the essential preventative maintenance so you can reclaim your weekends.</p>
           </div>
           <div className="flex gap-16">
             <div className="flex flex-col gap-3">
