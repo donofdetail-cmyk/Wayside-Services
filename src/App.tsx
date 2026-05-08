@@ -350,15 +350,7 @@ export default function App() {
 
 
 
-      {/* Guarantee */}
-      <section className="relative z-30 bg-deep-forest">
-        <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
-          <div className="w-10 h-10 rounded-full bg-pathway-green/15 flex items-center justify-center flex-shrink-0">
-            <i className="ti ti-shield-check text-pathway-green text-xl" />
-          </div>
-          <p className="text-white/80 text-sm"><strong className="text-white">Professional Service Guarantee.</strong> We stand by the quality of our work on every single visit. Proudly serving Reno homeowners.</p>
-        </div>
-      </section>
+
 
 
 
