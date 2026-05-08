@@ -565,7 +565,7 @@ export default function App() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-4 text-[11px] text-white/20">
-          <span>© {new Date().getFullYear()} Wayside Services Inc.</span>
+          <span>© {new Date().getFullYear()} Wayside Services LLC.</span>
         </div>
       </footer>
     </div>
