@@ -453,7 +453,7 @@ export default function App() {
                 '+ One rotating seasonal preventative task'
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2.5 text-sm text-white/80">
-                  <svg className="w-4 h-4 text-pathway-green flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                  <svg className="w-4 h-4 text-amber-porch flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
                   {item}
                 </div>
               ))}
